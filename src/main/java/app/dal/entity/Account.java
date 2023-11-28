@@ -20,6 +20,7 @@ public class Account {
         BigDecimal sumWithdrawalAmount = BigDecimal.ZERO;
         BigDecimal sumTransferReceiverAmount = BigDecimal.ZERO;
         BigDecimal sumTransferSenderAmount = BigDecimal.ZERO;
+        BigDecimal sumOfPayedCommissions = BigDecimal.ZERO;
         if (this.deposits != null) {
             Iterator<Deposit> itr = this.deposits.iterator();
             while (itr.hasNext()) {
@@ -45,9 +46,12 @@ public class Account {
                     sumTransferReceiverAmount = sumTransferReceiverAmount.add(transfer.getAmount());
 
                 }
+                BigDecimal commissionPercentage = BigDecimal.valueOf(transfer.getCommission());
+                BigDecimal payedCommission = commissionPercentage.divide(BigDecimal.valueOf(100)).multiply(transfer.amount);
+                sumOfPayedCommissions = sumOfPayedCommissions.add(payedCommission);
             }
         }
 
-        return sumDepositAmount.add(sumTransferReceiverAmount).subtract(sumWithdrawalAmount.add(sumTransferSenderAmount));
+        return sumDepositAmount.add(sumTransferReceiverAmount).subtract(sumWithdrawalAmount.add(sumTransferSenderAmount).add(sumOfPayedCommissions));
     }
 }

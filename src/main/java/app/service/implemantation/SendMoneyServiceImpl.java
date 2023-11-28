@@ -4,6 +4,7 @@ import app.controller.transfer.dto.TransferRequest;
 import app.dal.entity.Transfer;
 import app.dal.entity.User;
 import app.dal.repository.TransferRepository;
+import app.dal.repository.UserRepository;
 import app.service.SendMoneyService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,18 +19,18 @@ import java.time.Clock;
 public class SendMoneyServiceImpl implements SendMoneyService {
 
     private static final double COMMISSION = 0.50D;
-    private final UserService userService;
+    private final UserRepository userRepository;
     private final TransferRepository transferRepository;
     private final Clock clock;
 
     @Override
     public void sendMoney(final TransferRequest transferRequest) {
-        boolean userExist = this.userService.isUserExist(transferRequest.getAccountReceiverId());
+        boolean userExist = this.userRepository.isUserExist(transferRequest.getAccountReceiverId());
         if (!userExist) {
             throw new RuntimeException("Receiver does not exist");
         }
 
-        final User currentUser = this.userService.getCurrentUser();
+        final User currentUser = this.userRepository.getCurrentUser();
         final BigDecimal soldOfCurrentUser = currentUser.computeSoldOfAccount();
 
         if (this.isNotSufficientSold(soldOfCurrentUser, transferRequest.getAmount())) {

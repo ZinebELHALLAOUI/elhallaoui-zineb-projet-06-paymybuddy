@@ -19,6 +19,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserJdbcRepository implements UserRepository {
 
+    private final static int fakeCurrentUserId = 1;//tmp code
+
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final DepositRepository depositRepository;
@@ -73,6 +75,18 @@ public class UserJdbcRepository implements UserRepository {
             return Optional.empty();
         }
 
+    }
+
+    @Override
+    public boolean isUserExist(int userId) {
+        int count = this.countUsersByUserId(userId);
+        return count > 0;
+    }
+
+    @Override
+    public User getCurrentUser() {
+        Optional<User> user = this.findUserById(fakeCurrentUserId);
+        return user.get();
     }
 
 }
