@@ -28,4 +28,25 @@ public class DepositJdbcRepository implements DepositRepository {
                 BeanPropertyRowMapper.newInstance(Deposit.class)
         );
     }
+
+    @Override
+    public Deposit save(Deposit deposit) {
+        String sql = "INSERT INTO Deposit (account_id, amount, instant) " +
+                "VALUES (:accountId, :amount, :instant)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("accountId", deposit.getAccountId());
+        params.addValue("amount", deposit.getAmount());
+        params.addValue("instant", deposit.getInstant());
+
+        int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
+
+        if (rowsAffected > 0) {
+            Integer generatedId = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", new MapSqlParameterSource(), Integer.class);
+            deposit.setId(generatedId);
+            return deposit;
+        } else {
+            throw new RuntimeException("Save deposit failed");
+        }
+    }
 }

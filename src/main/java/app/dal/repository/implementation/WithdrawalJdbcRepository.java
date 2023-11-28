@@ -28,4 +28,26 @@ public class WithdrawalJdbcRepository implements WithdrawalRepository {
                 BeanPropertyRowMapper.newInstance(Withdrawal.class)
         );
     }
+
+    @Override
+    public Withdrawal save(Withdrawal withdrawal) {
+        String sql = "INSERT INTO Withdrawal (account_id, amount, instant) " +
+                "VALUES (:accountId, :amount, :instant)";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("accountId", withdrawal.getAccountId());
+        params.addValue("amount", withdrawal.getAmount());
+        params.addValue("instant", withdrawal.getInstant());
+
+        int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
+
+        if (rowsAffected > 0) {
+            Integer generatedId = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", new MapSqlParameterSource(), Integer.class);
+            withdrawal.setId(generatedId);
+            return withdrawal;
+        } else {
+            throw new RuntimeException("Save withdrawal failed");
+        }
+
+    }
 }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface WithdrawalRepository {
     List<Withdrawal> findsWithdrawalsByAccountId(int accountId);
+
+    Withdrawal save(Withdrawal withdrawal);
 }
