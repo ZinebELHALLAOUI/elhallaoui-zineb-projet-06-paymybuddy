@@ -11,7 +11,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private Account account;
+    private Account account;// TODO could be lazy loaded
 
     public BigDecimal computeSoldOfAccount() {
         return this.getAccount().computeSold();

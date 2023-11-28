@@ -29,6 +29,7 @@ public class TransferController {
     public String sendMoney(TransferRequest transferRequest, RedirectAttributes redirectAttributes) {
         log.info("Receive transfer request : " + transferRequest);
         sendMoneyService.sendMoney(transferRequest);
+        //TODO gestion des erreurs.
         return "redirect:/transfers";
     }
 }

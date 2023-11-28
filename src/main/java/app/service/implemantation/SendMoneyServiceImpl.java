@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.time.Instant;
 
 @Service
 @AllArgsConstructor
@@ -25,20 +26,20 @@ public class SendMoneyServiceImpl implements SendMoneyService {
 
     @Override
     public void sendMoney(final TransferRequest transferRequest) {
-        boolean userExist = this.userRepository.isUserExist(transferRequest.getAccountReceiverId());
-        if (!userExist) {
-            throw new RuntimeException("Receiver does not exist");
+        boolean isUserReceiverExist = this.userRepository.isUserExist(transferRequest.getAccountReceiverId());
+        if (!isUserReceiverExist) {
+            throw new RuntimeException("Receiver does not exist"); //TODO exception à personnaliser
         }
 
-        final User currentUser = this.userRepository.getCurrentUser();
-        final BigDecimal soldOfCurrentUser = currentUser.computeSoldOfAccount();
+        final User userSender = this.userRepository.getCurrentUser();
+        final BigDecimal soldOfCurrentUser = userSender.computeSoldOfAccount();
 
         if (this.isNotSufficientSold(soldOfCurrentUser, transferRequest.getAmount())) {
-            throw new RuntimeException("Insufficient sold");
+            throw new RuntimeException("Insufficient sold");//TODO exception à personnaliser
         }
 
         final Transfer transfer = new Transfer(
-                currentUser.getAccountId(),
+                userSender.getAccountId(),
                 transferRequest.getAccountReceiverId(),
                 transferRequest.getAmount(),
                 COMMISSION,
