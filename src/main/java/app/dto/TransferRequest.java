@@ -1,4 +1,4 @@
-package app.controller.transfer.dto;
+package app.dto;
 
 import lombok.Data;
 

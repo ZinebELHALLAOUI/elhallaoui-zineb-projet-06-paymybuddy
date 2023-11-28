@@ -1,6 +1,6 @@
 package app.controller.transfer;
 
-import app.controller.transfer.dto.TransferRequest;
+import app.dto.TransferRequest;
 import app.service.SendMoneyService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

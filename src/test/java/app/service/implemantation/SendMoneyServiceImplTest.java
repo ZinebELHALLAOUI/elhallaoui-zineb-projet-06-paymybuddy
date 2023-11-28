@@ -1,6 +1,6 @@
 package app.service.implemantation;
 
-import app.controller.transfer.dto.TransferRequest;
+import app.dto.TransferRequest;
 import app.dal.entity.*;
 import app.dal.repository.TransferRepository;
 import app.dal.repository.UserRepository;

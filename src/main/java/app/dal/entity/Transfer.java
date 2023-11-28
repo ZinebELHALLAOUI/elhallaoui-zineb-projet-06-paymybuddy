@@ -1,16 +1,18 @@
 package app.dal.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 
 @Data
+@NoArgsConstructor
 public class Transfer extends Transaction {
     private int accountReceiverId;
-    private Double commission;
+    private double commission;
 
-    public Transfer(int accountSenderId, int accountReceiverId, BigDecimal amount, Double commission, Instant instant) {
+    public Transfer(int accountSenderId, int accountReceiverId, BigDecimal amount, double commission, Instant instant) {
         this.accountId = accountSenderId;
         this.accountReceiverId = accountReceiverId;
         this.amount = amount;

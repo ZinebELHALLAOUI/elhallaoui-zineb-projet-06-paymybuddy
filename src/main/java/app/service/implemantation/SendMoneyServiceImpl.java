@@ -1,6 +1,6 @@
 package app.service.implemantation;
 
-import app.controller.transfer.dto.TransferRequest;
+import app.dto.TransferRequest;
 import app.dal.entity.Transfer;
 import app.dal.entity.User;
 import app.dal.repository.TransferRepository;
@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Clock;
-import java.time.Instant;
 
 @Service
 @AllArgsConstructor
