@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,7 +22,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     private final WithdrawalRepository withdrawalRepository;
 
     @Override
-    public void withdrawalMoney(WithdrawalRequest withdrawalRequest) {
+    public void withdrawMoney(WithdrawalRequest withdrawalRequest) {
         final User currentUser = this.userRepository.getCurrentUser();
         final Withdrawal withdrawal = new Withdrawal();
         withdrawal.setAccountId(currentUser.getAccountId());
@@ -29,5 +30,12 @@ public class WithdrawalServiceImpl implements WithdrawalService {
         withdrawal.setInstant(clock.instant());
 
         withdrawalRepository.save(withdrawal);
+    }
+
+    @Override
+    public List<Withdrawal> getWithdrawalsOfCurrentUSer() {
+        final User currentUser = this.userRepository.getCurrentUser();
+        List<Withdrawal> withdrawals = withdrawalRepository.findsWithdrawalsByAccountId(currentUser.getAccountId());
+        return withdrawals;
     }
 }
