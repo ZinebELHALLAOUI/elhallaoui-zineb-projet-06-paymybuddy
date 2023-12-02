@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head.html :: head"> </th:block> /*/-->
+</head>
+
+<body>
+<main>
+    <div class="container">
+        <!--/*/ <th:block th:include="fragments/header.html :: header"> </th:block> /*/-->
+        <!--/*/ <th:block th:include="fragments/breadcrumb.html :: breadcrumb"> </th:block> /*/-->
+
+        <div class="row">
+            <div class="col text-center">
+                <h1>Welcome to Pay My Buddy App</h1>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col">
+                <h3>Your actual sold : <span th:text="${sold}"></span> <span class="badge bg-secondary">€</span></h3>
+            </div>
+        </div>
+
+    </div>
+</main>
+<!--/*/ <th:block th:include="fragments/js.html :: js"> </th:block> /*/-->
+
+</body>
+</html>
