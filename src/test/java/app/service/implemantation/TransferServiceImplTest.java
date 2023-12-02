@@ -22,7 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class SendMoneyServiceImplTest {
+public class TransferServiceImplTest {
 
 
     @Mock
@@ -35,7 +35,7 @@ public class SendMoneyServiceImplTest {
     private Clock clock;
 
     @InjectMocks
-    private SendMoneyServiceImpl sendMoneyService;
+    private TransferServiceImpl sendMoneyService;
 
 
     @Test

@@ -5,18 +5,19 @@ import app.dal.entity.Transfer;
 import app.dal.entity.User;
 import app.dal.repository.TransferRepository;
 import app.dal.repository.UserRepository;
-import app.service.SendMoneyService;
+import app.service.TransferService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Clock;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
 @Transactional
-public class SendMoneyServiceImpl implements SendMoneyService {
+public class TransferServiceImpl implements TransferService {
 
     private static final double COMMISSION = 0.50D;
     private final UserRepository userRepository;
@@ -46,6 +47,13 @@ public class SendMoneyServiceImpl implements SendMoneyService {
         );
 
         transferRepository.save(transfer);
+    }
+
+    @Override
+    public List<Transfer> getTransfersOfCurrentUSer() {
+        final User currentUser = this.userRepository.getCurrentUser();
+        List<Transfer> transfers = transferRepository.findTransfersByAccountId(currentUser.getAccountId());
+        return transfers;
     }
 
     private boolean isSufficientSold(final BigDecimal sold, final BigDecimal transferAmount) {

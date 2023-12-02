@@ -19,7 +19,7 @@ public class TransferJdbcRepository implements TransferRepository {
     @Override
     public List<Transfer> findTransfersByAccountId(int accountId) {
         String sql = """
-                SELECT id, account_id_sender, account_id_receiver, amount, commission_percentage, instant
+                SELECT id, account_id_sender as accountId, account_id_receiver as accountReceiverId, amount, commission_percentage as commission, instant
                 FROM Transfer WHERE account_id_sender = :accountId
                 """;
 

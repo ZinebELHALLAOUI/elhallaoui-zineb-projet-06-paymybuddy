@@ -1,43 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>Pay My Buddy</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!--/*/ <th:block th:include="fragments/head.html :: head"> </th:block> /*/-->
 </head>
 
 <body>
 <main>
     <div class="container">
-        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <a href="/"
-               class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <span class="fs-4">Pay My Buddy</span>
-            </a>
+        <!--/*/ <th:block th:include="fragments/header.html :: header"> </th:block> /*/-->
+        <!--/*/ <th:block th:include="fragments/breadcrumb.html :: breadcrumb"> </th:block> /*/-->
 
-            <ul class="nav nav-pills">
-                <li class="nav-item"><a href="#" class="nav-link">Home</a></li>
-                <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Transfer</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Profile</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
-                <li class="nav-item"><a href="#" class="nav-link">Log off</a></li>
-            </ul>
-        </header>
-
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="#">Home</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Transfer</li>
-            </ol>
-        </nav>
         <div class="row">
             <div class="col">
-                <form th:action="@{/transfers}" method="post" enctype="multipart/form-data" th:object="${transferRequest}" >
+                <form th:action="@{/transfers}" method="post" enctype="multipart/form-data"
+                      th:object="${transferRequest}">
                     <fieldset>
-                        <legend>Send Money</legend>
+                        <legend>Send Money </legend>
                         <div class="row">
                             <div class="col">
                                 <select class="form-select" th:field="*{accountReceiverId}">
@@ -61,10 +39,30 @@
                 </form>
             </div>
         </div>
+        <hr class="bg-primary border-2 border-top border-primary" />
+        <div class="row">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">Connections</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Amount</th>
+                    <th scope="col">Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="transferDto: ${transfers}">
+                    <td scope="row"th:text="${transferDto.connection}" />
+                    <td scope="row"th:text="${transferDto.description}" />
+                    <td scope="row"th:text="${transferDto.money}" />
+                    <td scope="row" th:text="${transferDto.date}" />
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </main>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+<!--/*/ <th:block th:include="fragments/js.html :: js"> </th:block> /*/-->
+
 </body>
 </html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<block th:fragment="breadcrumb">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+            <th:block th:switch="${#httpServletRequest.requestURI}">
+                <li th:case="'/transfers'" class="breadcrumb-item active" aria-current="page">Transfer</li>
+                <li th:case="'/deposits'" class="breadcrumb-item active" aria-current="page">Deposits</li>
+                <li th:case="'/withdrawals'" class="breadcrumb-item active" aria-current="page">Withdrawal</li>
+                <span th:case="*"></span>
+            </th:block>
+        </ol>
+    </nav>
+</block>
+</html>
