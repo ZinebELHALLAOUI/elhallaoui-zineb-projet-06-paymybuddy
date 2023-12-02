@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Clock;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -32,5 +33,12 @@ public class DepositServiceImpl implements DepositService {
 
         depositRepository.save(deposit);
 
+    }
+
+    @Override
+    public List<Deposit> getDepositsOfCurrentUSer() {
+        final User currentUser = this.userRepository.getCurrentUser();
+        List<Deposit> deposits = depositRepository.findDepositsByAccountId(currentUser.getAccountId());
+        return deposits;
     }
 }

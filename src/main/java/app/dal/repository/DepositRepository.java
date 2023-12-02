@@ -8,4 +8,5 @@ public interface DepositRepository {
     List<Deposit> findDepositsByAccountId(int accountId);
 
     Deposit save(Deposit deposit);
+
 }
