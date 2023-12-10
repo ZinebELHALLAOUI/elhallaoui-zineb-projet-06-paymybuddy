@@ -22,6 +22,7 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     private final WithdrawalRepository withdrawalRepository;
 
     @Override
+    //checker le solde.
     public void withdrawMoney(WithdrawalRequest withdrawalRequest) {
         final User currentUser = this.userRepository.getCurrentUser();
         final Withdrawal withdrawal = new Withdrawal();

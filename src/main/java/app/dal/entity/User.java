@@ -13,10 +13,6 @@ public class User {
     private String password;
     private Account account;// TODO could be lazy loaded
 
-    public BigDecimal computeSoldOfAccount() {
-        return this.getAccount().computeSold();
-    }
-
     public int getAccountId() {
         return this.account.getId();
     }

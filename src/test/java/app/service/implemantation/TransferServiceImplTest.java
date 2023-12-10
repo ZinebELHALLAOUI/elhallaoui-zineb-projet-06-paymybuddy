@@ -1,13 +1,12 @@
 package app.service.implemantation;
 
-import app.dto.TransferRequest;
 import app.dal.entity.*;
 import app.dal.repository.TransferRepository;
 import app.dal.repository.UserRepository;
+import app.dto.TransferRequest;
+import app.service.SoldCalculatorService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,17 +24,14 @@ import static org.mockito.Mockito.when;
 public class TransferServiceImplTest {
 
 
-    @Mock
-    private UserRepository userRepository;
+    private final UserRepository userRepository = Mockito.mock(UserRepository.class);
 
-    @Mock
-    private TransferRepository transferRepository;
+    private final TransferRepository transferRepository = Mockito.mock(TransferRepository.class);
+    private final SoldCalculatorService soldCalculatorService = new SoldCalculatorServiceImpl();
 
-    @Mock
-    private Clock clock;
+    private final Clock clock = Mockito.mock(Clock.class);
 
-    @InjectMocks
-    private TransferServiceImpl sendMoneyService;
+    private TransferServiceImpl sendMoneyService = new TransferServiceImpl(userRepository, transferRepository, soldCalculatorService, clock);
 
 
     @Test
