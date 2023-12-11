@@ -12,7 +12,7 @@
     <li class="nav-item"><a href="./transfers" th:class="${#httpServletRequest.requestURI.equals('/transfers')} ? 'nav-link active' : 'nav-link'">Transfer</a></li>
     <li class="nav-item"><a href="./deposits" th:class="${#httpServletRequest.requestURI.equals('/deposits')} ? 'nav-link active' : 'nav-link'">Deposit</a></li>
     <li class="nav-item"><a href="./withdrawals" th:class="${#httpServletRequest.requestURI.equals('/withdrawals')} ? 'nav-link active' : 'nav-link'">Withdrawal</a></li>
-    <li class="nav-item"><a href="#" class="nav-link">Log off</a></li>
+    <li class="nav-item"><a th:href="@{/logout}" class="nav-link">Log off</a></li>
   </ul>
 </header>
 </block>

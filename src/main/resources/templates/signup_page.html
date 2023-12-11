@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--/*/ <th:block th:include="fragments/head.html :: head"> </th:block> /*/-->
+    <style>
+        html,
+body {
+  height: 100%;
+}
+
+.form-signup {
+  max-width: 330px;
+  padding: 1rem;
+}
+
+.form-signup .form-floating:focus-within {
+  z-index: 2;
+}
+
+.form-signup input {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+    </style>
+</head>
+
+<body class="d-flex align-items-center py-4 bg-body-tertiary">
+
+
+<main class="form-signup w-100 m-auto">
+    <form th:action="@{/sign-up}" method="post" th:object="${signUpRequest}">
+        <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
+
+        <div class="form-floating">
+            <input type="text"  class="form-control" id="firstname" placeholder="John" th:field="*{firstname}">
+            <label for="firstname">Firstname</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="text" class="form-control" id="lastname" placeholder="Green" th:field="*{lastname}">
+            <label for="lastname">Lastname</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="email" class="form-control" id="email" placeholder="name@example.com" th:field="*{email}">
+            <label for="email">Email</label>
+        </div>
+
+        <div class="form-floating">
+            <input type="password" class="form-control" id="psw" placeholder="Password" th:field="*{password}">
+            <label for="psw">Password</label>
+        </div>
+        <br/>
+        <button class="btn btn-primary w-100 py-2" type="submit">Sign Up</button>
+        <h5>Already member ? <a href="/sign-in">Sign In! </a></h5>
+        <div th:if="${param.error}">
+            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+        </div>
+    </form>
+</main>
+</body>
+</html>
