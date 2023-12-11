@@ -11,9 +11,12 @@ CREATE TABLE User (
     last_name VARCHAR(255),
     email VARCHAR(255),
     password TEXT,
+    enabled TINYINT(1) NOT NULL DEFAULT 1,
     id_account INTEGER,
     FOREIGN KEY (id_account) REFERENCES Account(id)
 );
+ALTER TABLE User
+ADD CONSTRAINT unique_email UNIQUE (email);
 
 -- Création de la table Friend
 CREATE TABLE Friend (
@@ -54,20 +57,8 @@ CREATE TABLE Transfer (
     FOREIGN KEY (account_id_receiver) REFERENCES Account(id)
 );
 
--- Insertion des comptes
-INSERT INTO Account (account_number) VALUES ('CompteUser1'), ('CompteUser2');
-
--- Insertion des utilisateurs
-INSERT INTO User (first_name, last_name, email, password, id_account)
-VALUES
-    ('John', 'Doe', 'john@example.com', 'password1', 1), -- Le compte 1 est associé à John
-    ('Alice', 'Smith', 'alice@example.com', 'password2', 2); -- Le compte 2 est associé à Alice
-
--- Insertion des dépôts
-INSERT INTO Deposit (account_id, amount, instant)
-VALUES
-    (1, 100.00, NOW()), -- Dépôt de 100 pour John
-    (2, 150.00, NOW()); -- Dépôt de 150 pour Alice
-
--- Établissement de la relation d'amitié entre John et Alice
-INSERT INTO Friend (user_id, user_friend_id) VALUES (1, 2); -- John est ami avec Alice
+CREATE TABLE Authority (
+    email VARCHAR(255) NOT NULL,
+    authority VARCHAR(50) NOT NULL,
+    FOREIGN KEY (email) REFERENCES User(email)
+);
