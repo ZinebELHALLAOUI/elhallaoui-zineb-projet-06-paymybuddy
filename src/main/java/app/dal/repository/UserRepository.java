@@ -5,14 +5,17 @@ import app.dal.entity.User;
 import java.util.Optional;
 
 public interface UserRepository {
-    int countUsersByUserId(int userId);
+    int countUsersByAccountId(int accountId);
 
     Optional<User> findUserByEmail(String email);
 
-    boolean isUserExist(int userId);
+    Optional<User> findUserById(int userId);
+
+    boolean isUserExistByAccountId(int accountId);
 
     User getCurrentUser();
 
     User save(User user);
 
+    Optional<User> findUserByAccountId(int accountId);
 }

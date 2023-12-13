@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface TransferRepository {
 
-    List<Transfer> findTransfersByAccountId(int accountId);
+    List<Transfer> findSendAndReceiveTransfersByAccountId(int accountId);
+    List<Transfer> findSendTransfersByAccountId(int accountId);
     Transfer save(Transfer transfer);
 }

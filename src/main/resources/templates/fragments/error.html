@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<block th:fragment="error">
+    <div th:if="${errors}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <p th:each="err : ${errors}" th:text="${err}"/>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</block>
+</html>

@@ -40,13 +40,12 @@ public class SoldCalculatorServiceImpl implements SoldCalculatorService {
                 Transfer transfer = itr.next();
                 if (transfer.isSender(account)) {
                     sumTransferSenderAmount = sumTransferSenderAmount.add(transfer.getAmount());
+                    BigDecimal commissionPercentage = BigDecimal.valueOf(transfer.getCommission());
+                    BigDecimal payedCommission = commissionPercentage.divide(BigDecimal.valueOf(100)).multiply(transfer.getAmount());
+                    sumOfPayedCommissions = sumOfPayedCommissions.add(payedCommission);
                 } else {
                     sumTransferReceiverAmount = sumTransferReceiverAmount.add(transfer.getAmount());
-
                 }
-                BigDecimal commissionPercentage = BigDecimal.valueOf(transfer.getCommission());
-                BigDecimal payedCommission = commissionPercentage.divide(BigDecimal.valueOf(100)).multiply(transfer.getAmount());
-                sumOfPayedCommissions = sumOfPayedCommissions.add(payedCommission);
             }
         }
 

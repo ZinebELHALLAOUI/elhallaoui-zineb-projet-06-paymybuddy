@@ -37,7 +37,7 @@ public class TransferServiceImplTest {
     @Test
     public void should_throw_exception_when_receiver_user_does_not_exist() {
         //given
-        when(userRepository.isUserExist(1)).thenReturn(false);
+        when(userRepository.isUserExistByAccountId(1)).thenReturn(false);
         final TransferRequest transferRequest = new TransferRequest();
         transferRequest.setAccountReceiverId(1);
         transferRequest.setAmount(BigDecimal.valueOf(200));
@@ -50,7 +50,7 @@ public class TransferServiceImplTest {
     @Test
     public void should_throw_exception_when_current_user_account_has_sold_100_but_send_200() {
         //given
-        when(userRepository.isUserExist(1)).thenReturn(true);
+        when(userRepository.isUserExistByAccountId(1)).thenReturn(true);
         User currentUser = getAUserWithSold100();
         when(userRepository.getCurrentUser()).thenReturn(currentUser);
         final TransferRequest transferRequest = new TransferRequest();
@@ -65,7 +65,7 @@ public class TransferServiceImplTest {
     @Test
     public void should_throw_exception_when_current_user_account_has_sold_but_69_9_but_send_70() {
         //given
-        when(userRepository.isUserExist(1)).thenReturn(true);
+        when(userRepository.isUserExistByAccountId(1)).thenReturn(true);
         User currentUser = getAUserWithSold69_9();
         when(userRepository.getCurrentUser()).thenReturn(currentUser);
         final TransferRequest transferRequest = new TransferRequest();
@@ -80,7 +80,7 @@ public class TransferServiceImplTest {
     @Test
     public void should_save_transfer_when_sold_is_enough_and_receiver_user_is_exist() {
         //given
-        when(userRepository.isUserExist(1)).thenReturn(true);
+        when(userRepository.isUserExistByAccountId(1)).thenReturn(true);
         User currentUser = getAUserWithSold100();
         when(userRepository.getCurrentUser()).thenReturn(currentUser);
         Instant instant = Clock.systemDefaultZone().instant();

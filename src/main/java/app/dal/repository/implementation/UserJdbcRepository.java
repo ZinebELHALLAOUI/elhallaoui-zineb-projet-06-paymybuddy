@@ -26,9 +26,9 @@ public class UserJdbcRepository implements UserRepository {
     private final AccountRepository accountRepository;
 
     @Override
-    public int countUsersByUserId(int userId) {
-        final String sql = "SELECT COUNT(*) FROM User WHERE id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, userId);
+    public int countUsersByAccountId(int accountId) {
+        final String sql = "SELECT COUNT(*) FROM User WHERE id_account = ?";
+        return jdbcTemplate.queryForObject(sql, Integer.class, accountId);
     }
 
     @Override
@@ -63,7 +63,7 @@ public class UserJdbcRepository implements UserRepository {
                 account.setAccountNumber(rs.getString("account_number"));
                 account.setDeposits(depositRepository.findDepositsByAccountId(account.getId()));
                 account.setWithdrawals(withdrawalRepository.findsWithdrawalsByAccountId(account.getId()));
-                account.setTransfers(transferRepository.findTransfersByAccountId(account.getId()));
+                account.setTransfers(transferRepository.findSendAndReceiveTransfersByAccountId(account.getId()));
 
                 user.setAccount(account);
 
@@ -76,8 +76,51 @@ public class UserJdbcRepository implements UserRepository {
     }
 
     @Override
-    public boolean isUserExist(int userId) {
-        int count = this.countUsersByUserId(userId);
+    public Optional<User> findUserById(int userId) {
+        final String sql = """
+                SELECT
+                    u.id as user_id, u.first_name, u.last_name, u.email, u.password,
+                    a.id as account_id, a.account_number
+                FROM
+                    User u
+                INNER JOIN
+                    Account a ON u.id_account = a.id
+                WHERE
+                    u.id = :userId
+                """;
+
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", userId);
+
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> {
+                User user = new User();
+                user.setId(rs.getInt("user_id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+
+                Account account = new Account();
+                account.setId(rs.getInt("account_id"));
+                account.setAccountNumber(rs.getString("account_number"));
+                account.setDeposits(depositRepository.findDepositsByAccountId(account.getId()));
+                account.setWithdrawals(withdrawalRepository.findsWithdrawalsByAccountId(account.getId()));
+                account.setTransfers(transferRepository.findSendAndReceiveTransfersByAccountId(account.getId()));
+
+                user.setAccount(account);
+
+                return user;
+            }));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public boolean isUserExistByAccountId(int accountId) {
+        int count = this.countUsersByAccountId(accountId);
         return count > 0;
     }
 
@@ -112,6 +155,49 @@ public class UserJdbcRepository implements UserRepository {
             return user;
         } else {
             throw new RuntimeException("Save user failed");
+        }
+    }
+
+    @Override
+    public Optional<User> findUserByAccountId(int accountId) {
+        final String sql = """
+                SELECT
+                    u.id as user_id, u.first_name, u.last_name, u.email, u.password,
+                    a.id as account_id, a.account_number
+                FROM
+                    User u
+                INNER JOIN
+                    Account a ON u.id_account = a.id
+                WHERE
+                    u.id_account = :accountId
+                """;
+
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("accountId", accountId);
+
+        try {
+            return Optional.ofNullable(namedParameterJdbcTemplate.queryForObject(sql, params, (rs, rowNum) -> {
+                User user = new User();
+                user.setId(rs.getInt("user_id"));
+                user.setFirstName(rs.getString("first_name"));
+                user.setLastName(rs.getString("last_name"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+
+                Account account = new Account();
+                account.setId(rs.getInt("account_id"));
+                account.setAccountNumber(rs.getString("account_number"));
+                account.setDeposits(depositRepository.findDepositsByAccountId(account.getId()));
+                account.setWithdrawals(withdrawalRepository.findsWithdrawalsByAccountId(account.getId()));
+                account.setTransfers(transferRepository.findSendAndReceiveTransfersByAccountId(account.getId()));
+
+                user.setAccount(account);
+
+                return user;
+            }));
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
         }
     }
 

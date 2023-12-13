@@ -28,7 +28,7 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void sendMoney(final TransferRequest transferRequest) {
-        boolean isUserReceiverExist = this.userRepository.isUserExist(transferRequest.getAccountReceiverId());
+        boolean isUserReceiverExist = this.userRepository.isUserExistByAccountId(transferRequest.getAccountReceiverId());
         if (!isUserReceiverExist) {
             throw new RuntimeException("Receiver does not exist"); //TODO exception à personnaliser
         }
@@ -53,7 +53,7 @@ public class TransferServiceImpl implements TransferService {
     @Override
     public List<Transfer> getTransfersOfCurrentUSer() {
         final User currentUser = this.userRepository.getCurrentUser();
-        List<Transfer> transfers = transferRepository.findTransfersByAccountId(currentUser.getAccountId());
+        List<Transfer> transfers = transferRepository.findSendTransfersByAccountId(currentUser.getAccountId());
         return transfers;
     }
 

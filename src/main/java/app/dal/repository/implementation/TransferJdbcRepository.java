@@ -17,7 +17,24 @@ public class TransferJdbcRepository implements TransferRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Override
-    public List<Transfer> findTransfersByAccountId(int accountId) {
+    public List<Transfer> findSendAndReceiveTransfersByAccountId(int accountId) {
+        String sql = """
+                SELECT id, account_id_sender as accountId, account_id_receiver as accountReceiverId, amount, commission_percentage as commission, instant
+                FROM Transfer WHERE account_id_sender = :accountId or account_id_receiver = :accountId
+                """;
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("accountId", accountId);
+
+        return namedParameterJdbcTemplate.query(
+                sql,
+                params,
+                BeanPropertyRowMapper.newInstance(Transfer.class)
+        );
+    }
+
+    @Override
+    public List<Transfer> findSendTransfersByAccountId(int accountId) {
         String sql = """
                 SELECT id, account_id_sender as accountId, account_id_receiver as accountReceiverId, amount, commission_percentage as commission, instant
                 FROM Transfer WHERE account_id_sender = :accountId
@@ -47,7 +64,7 @@ public class TransferJdbcRepository implements TransferRepository {
 
         int rowsAffected = namedParameterJdbcTemplate.update(sql, params);
 
-        if (rowsAffected > 0) {
+        if (rowsAffected == 1) {
             Integer generatedId = namedParameterJdbcTemplate.queryForObject("SELECT LAST_INSERT_ID()", new MapSqlParameterSource(), Integer.class);
             transfer.setId(generatedId);
             return transfer;

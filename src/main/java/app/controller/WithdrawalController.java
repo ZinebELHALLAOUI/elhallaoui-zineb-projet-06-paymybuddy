@@ -41,8 +41,12 @@ public class WithdrawalController {
     @PostMapping
     public String deposeMoney(WithdrawalRequest withdrawalRequest, RedirectAttributes redirectAttributes) {
         log.info("Receive withdrawal request : " + withdrawalRequest);
-        withdrawalService.withdrawMoney(withdrawalRequest);
-        //TODO gestion des erreurs.
+        try {
+            withdrawalService.withdrawMoney(withdrawalRequest);
+        } catch (Exception e) {
+            final List<String> errors = List.of(e.getMessage());
+            redirectAttributes.addFlashAttribute("errors", errors);
+        }
         return "redirect:/withdrawals";
     }
 }
