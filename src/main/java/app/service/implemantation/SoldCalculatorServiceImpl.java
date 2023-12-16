@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 @Service
 public class SoldCalculatorServiceImpl implements SoldCalculatorService {
+
     @Override
     public BigDecimal calculate(Account account) {
         BigDecimal sumDepositAmount = BigDecimal.ZERO;
@@ -20,24 +21,18 @@ public class SoldCalculatorServiceImpl implements SoldCalculatorService {
         BigDecimal sumTransferSenderAmount = BigDecimal.ZERO;
         BigDecimal sumOfPayedCommissions = BigDecimal.ZERO;
         if (account.getDeposits() != null) {
-            Iterator<Deposit> itr = account.getDeposits().iterator();
-            while (itr.hasNext()) {
-                Deposit deposit = itr.next();
+            for (Deposit deposit : account.getDeposits()) {
                 sumDepositAmount = sumDepositAmount.add(deposit.getAmount());
             }
         }
         if (account.getWithdrawals() != null) {
-            Iterator<Withdrawal> itr = account.getWithdrawals().iterator();
-            while (itr.hasNext()) {
-                Withdrawal withdrawal = itr.next();
+            for (Withdrawal withdrawal : account.getWithdrawals()) {
                 sumWithdrawalAmount = sumWithdrawalAmount.add(withdrawal.getAmount());
             }
         }
 
         if (account.getTransfers() != null) {
-            Iterator<Transfer> itr = account.getTransfers().iterator();
-            while (itr.hasNext()) {
-                Transfer transfer = itr.next();
+            for (Transfer transfer : account.getTransfers()) {
                 if (transfer.isSender(account)) {
                     sumTransferSenderAmount = sumTransferSenderAmount.add(transfer.getAmount());
                     BigDecimal commissionPercentage = BigDecimal.valueOf(transfer.getCommission());

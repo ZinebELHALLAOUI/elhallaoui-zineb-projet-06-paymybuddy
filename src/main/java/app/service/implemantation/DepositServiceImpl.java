@@ -1,11 +1,9 @@
 package app.service.implemantation;
 
+import app.controller.dto.DepositRequest;
 import app.dal.entity.Deposit;
-import app.dal.entity.Transfer;
 import app.dal.entity.User;
 import app.dal.repository.DepositRepository;
-import app.dal.repository.UserRepository;
-import app.dto.DepositRequest;
 import app.service.DepositService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,16 +16,13 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class DepositServiceImpl implements DepositService {
-    private final UserRepository userRepository;
     private final Clock clock;
     private final DepositRepository depositRepository;
 
     @Override
-    public void deposeMoney(DepositRequest depositRequest) {
-        final User currentUser = this.userRepository.getCurrentUser();
-//TODO Check negative deposit
+    public void deposeMoney(DepositRequest depositRequest, User user) {
         final Deposit deposit = new Deposit();
-        deposit.setAccountId(currentUser.getAccountId());
+        deposit.setAccountId(user.getAccountId());
         deposit.setAmount(depositRequest.getAmount());
         deposit.setInstant(clock.instant());
 
@@ -36,9 +31,8 @@ public class DepositServiceImpl implements DepositService {
     }
 
     @Override
-    public List<Deposit> getDepositsOfCurrentUSer() {
-        final User currentUser = this.userRepository.getCurrentUser();
-        List<Deposit> deposits = depositRepository.findDepositsByAccountId(currentUser.getAccountId());
+    public List<Deposit> getDepositsByUser(User user) {
+        List<Deposit> deposits = depositRepository.findDepositsByAccountId(user.getAccountId());
         return deposits;
     }
 }

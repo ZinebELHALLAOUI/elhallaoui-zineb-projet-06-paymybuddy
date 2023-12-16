@@ -1,10 +1,9 @@
-package app.dto;
+package app.controller.dto;
 
 import lombok.Data;
 
 import java.math.BigDecimal;
-
 @Data
-public class WithdrawalRequest {
+public class DepositRequest {
     private BigDecimal amount;
 }

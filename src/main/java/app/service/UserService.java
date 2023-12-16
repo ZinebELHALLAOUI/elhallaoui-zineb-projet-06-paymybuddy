@@ -1,9 +1,12 @@
 package app.service;
 
-import java.math.BigDecimal;
+import app.controller.dto.SignUpRequest;
+
 import java.util.Optional;
 
 public interface UserService {
-    BigDecimal getSoldOfCurrentUser();
+
     Optional<String> getUserNameByAccountId(int accountId);
+    void signup(SignUpRequest signUpRequest);
+
 }

@@ -1,9 +1,8 @@
 package app.controller;
 
 import app.dal.entity.Deposit;
-import app.dto.DepositDto;
-import app.dto.DepositRequest;
-import app.dto.TransferRequest;
+import app.controller.dto.DepositDto;
+import app.controller.dto.DepositRequest;
 import app.service.DepositService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +22,11 @@ import java.util.List;
 public class DepositController {
 
     private final DepositService depositService;
+    private final UserInfo userInfo;
 
     @GetMapping
     public String getDeposits(Model model) {
-        List<Deposit> depositsOfCurrentUSer = depositService.getDepositsOfCurrentUSer();
+        List<Deposit> depositsOfCurrentUSer = depositService.getDepositsByUser(userInfo.get());
         List<DepositDto> depositDtos = depositsOfCurrentUSer.stream().map(deposit -> {
             final DepositDto depositDto = new DepositDto();
             depositDto.setDeposit(deposit.getAmount());
@@ -42,8 +42,16 @@ public class DepositController {
     @PostMapping
     public String deposeMoney(DepositRequest depositRequest, RedirectAttributes redirectAttributes) {
         log.info("Receive deposit request : " + depositRequest);
-        depositService.deposeMoney(depositRequest);
-        //TODO gestion des erreurs.
+
+        try {
+            depositService.deposeMoney(depositRequest, userInfo.get());
+            final List<String> infos = List.of("Successfully deposed");
+            redirectAttributes.addFlashAttribute("infos", infos);
+        } catch (Exception e) {
+            final List<String> errors = List.of(e.getMessage());
+            redirectAttributes.addFlashAttribute("errors", errors);
+        }
         return "redirect:/deposits";
+
     }
 }

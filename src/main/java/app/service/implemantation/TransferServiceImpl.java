@@ -1,10 +1,10 @@
 package app.service.implemantation;
 
+import app.controller.dto.TransferRequest;
 import app.dal.entity.Transfer;
 import app.dal.entity.User;
 import app.dal.repository.TransferRepository;
 import app.dal.repository.UserRepository;
-import app.dto.TransferRequest;
 import app.service.SoldCalculatorService;
 import app.service.TransferService;
 import lombok.AllArgsConstructor;
@@ -27,20 +27,19 @@ public class TransferServiceImpl implements TransferService {
     private final Clock clock;
 
     @Override
-    public void sendMoney(final TransferRequest transferRequest) {
+    public void sendMoney(final TransferRequest transferRequest, User user) {
         boolean isUserReceiverExist = this.userRepository.isUserExistByAccountId(transferRequest.getAccountReceiverId());
         if (!isUserReceiverExist) {
-            throw new RuntimeException("Receiver does not exist"); //TODO exception à personnaliser
+            throw new RuntimeException("Receiver does not exist");
         }
 
-        final User userSender = this.userRepository.getCurrentUser();
 
-        if (this.isNotSufficientSold(soldCalculatorService.calculate(userSender.getAccount()), transferRequest.getAmount())) {
-            throw new RuntimeException("Insufficient sold");//TODO exception à personnaliser
+        if (this.isNotSufficientSold(soldCalculatorService.calculate(user.getAccount()), transferRequest.getAmount())) {
+            throw new RuntimeException("Insufficient sold");
         }
 
         final Transfer transfer = new Transfer(
-                userSender.getAccountId(),
+                user.getAccountId(),
                 transferRequest.getAccountReceiverId(),
                 transferRequest.getAmount(),
                 COMMISSION,
@@ -51,14 +50,16 @@ public class TransferServiceImpl implements TransferService {
     }
 
     @Override
-    public List<Transfer> getTransfersOfCurrentUSer() {
-        final User currentUser = this.userRepository.getCurrentUser();
-        List<Transfer> transfers = transferRepository.findSendTransfersByAccountId(currentUser.getAccountId());
+    public List<Transfer> getTransfersByUser(User user) {
+        List<Transfer> transfers = transferRepository.findSendTransfersByAccountId(user.getAccountId());
         return transfers;
     }
 
     private boolean isSufficientSold(final BigDecimal sold, final BigDecimal transferAmount) {
-        return sold.compareTo(transferAmount.multiply(BigDecimal.ONE.add(BigDecimal.valueOf(COMMISSION)))) >= 0;
+        BigDecimal commissionPercentage = BigDecimal.valueOf(COMMISSION);
+        BigDecimal fractionCommission = commissionPercentage.divide(BigDecimal.valueOf(100));
+        BigDecimal commissionTransfer = fractionCommission.multiply(transferAmount);
+        return sold.subtract(commissionTransfer).compareTo(transferAmount) >= 0;
     }
 
     private boolean isNotSufficientSold(final BigDecimal sold, final BigDecimal transferAmount) {

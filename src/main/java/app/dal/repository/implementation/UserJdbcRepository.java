@@ -8,8 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -122,14 +120,6 @@ public class UserJdbcRepository implements UserRepository {
     public boolean isUserExistByAccountId(int accountId) {
         int count = this.countUsersByAccountId(accountId);
         return count > 0;
-    }
-
-    @Override
-    public User getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String currentUserEmail = authentication.getName();
-        Optional<User> user = this.findUserByEmail(currentUserEmail);
-        return user.get();
     }
 
     @Override

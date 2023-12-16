@@ -1,8 +1,8 @@
 package app.controller;
 
+import app.controller.dto.WithdrawalDto;
+import app.controller.dto.WithdrawalRequest;
 import app.dal.entity.Withdrawal;
-import app.dto.WithdrawalDto;
-import app.dto.WithdrawalRequest;
 import app.service.WithdrawalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,10 +22,12 @@ import java.util.List;
 public class WithdrawalController {
 
     private final WithdrawalService withdrawalService;
+    private final UserInfo userInfo;
+
 
     @GetMapping
     public String getWithdrawals(Model model) {
-        List<Withdrawal> withdrawalsOfCurrentUSer = withdrawalService.getWithdrawalsOfCurrentUSer();
+        List<Withdrawal> withdrawalsOfCurrentUSer = withdrawalService.getWithdrawalsByUser(userInfo.get());
         List<WithdrawalDto> withdrawalDtos = withdrawalsOfCurrentUSer.stream().map(withdrawal -> {
             final WithdrawalDto withdrawalDto = new WithdrawalDto();
             withdrawalDto.setWithdrawal(withdrawal.getAmount());
@@ -42,7 +44,9 @@ public class WithdrawalController {
     public String deposeMoney(WithdrawalRequest withdrawalRequest, RedirectAttributes redirectAttributes) {
         log.info("Receive withdrawal request : " + withdrawalRequest);
         try {
-            withdrawalService.withdrawMoney(withdrawalRequest);
+            withdrawalService.withdrawMoney(withdrawalRequest, userInfo.get());
+            final List<String> infos = List.of("Successfully withdrawal");
+            redirectAttributes.addFlashAttribute("infos", infos);
         } catch (Exception e) {
             final List<String> errors = List.of(e.getMessage());
             redirectAttributes.addFlashAttribute("errors", errors);

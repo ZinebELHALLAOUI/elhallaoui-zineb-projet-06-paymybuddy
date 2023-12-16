@@ -1,10 +1,10 @@
 package app.service.implemantation;
 
+import app.controller.dto.WithdrawalRequest;
 import app.dal.entity.User;
 import app.dal.entity.Withdrawal;
 import app.dal.repository.UserRepository;
 import app.dal.repository.WithdrawalRepository;
-import app.dto.WithdrawalRequest;
 import app.service.SoldCalculatorService;
 import app.service.WithdrawalService;
 import lombok.AllArgsConstructor;
@@ -19,20 +19,18 @@ import java.util.List;
 @AllArgsConstructor
 @Transactional
 public class WithdrawalServiceImpl implements WithdrawalService {
-    private final UserRepository userRepository;
     private final Clock clock;
     private final WithdrawalRepository withdrawalRepository;
     private final SoldCalculatorService soldCalculatorService;
 
     @Override
-    public void withdrawMoney(WithdrawalRequest withdrawalRequest) {
-        final User currentUser = this.userRepository.getCurrentUser();
-        BigDecimal sold = soldCalculatorService.calculate(currentUser.getAccount());
+    public void withdrawMoney(WithdrawalRequest withdrawalRequest, User user) {
+        BigDecimal sold = soldCalculatorService.calculate(user.getAccount());
         if(sold.compareTo(withdrawalRequest.getAmount()) < 0){
             throw new RuntimeException("Withdraw greater than your sold");
         }
         final Withdrawal withdrawal = new Withdrawal();
-        withdrawal.setAccountId(currentUser.getAccountId());
+        withdrawal.setAccountId(user.getAccountId());
         withdrawal.setAmount(withdrawalRequest.getAmount());
         withdrawal.setInstant(clock.instant());
 
@@ -40,9 +38,8 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
-    public List<Withdrawal> getWithdrawalsOfCurrentUSer() {
-        final User currentUser = this.userRepository.getCurrentUser();
-        List<Withdrawal> withdrawals = withdrawalRepository.findsWithdrawalsByAccountId(currentUser.getAccountId());
+    public List<Withdrawal> getWithdrawalsByUser(User user) {
+        List<Withdrawal> withdrawals = withdrawalRepository.findsWithdrawalsByAccountId(user.getAccountId());
         return withdrawals;
     }
 }

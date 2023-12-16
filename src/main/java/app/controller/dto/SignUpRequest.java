@@ -1,10 +1,10 @@
-package app.dto;
+package app.controller.dto;
 
 import lombok.Data;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 public class SignUpRequest {
@@ -16,6 +16,6 @@ public class SignUpRequest {
     @Email
     private String email;
     @NotBlank
-    @Min(value = 6, message = "Password size should be greater than 6 chars")
+    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
     private String password;
 }

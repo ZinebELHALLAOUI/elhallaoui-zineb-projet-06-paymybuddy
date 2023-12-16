@@ -13,8 +13,6 @@ public interface UserRepository {
 
     boolean isUserExistByAccountId(int accountId);
 
-    User getCurrentUser();
-
     User save(User user);
 
     Optional<User> findUserByAccountId(int accountId);
