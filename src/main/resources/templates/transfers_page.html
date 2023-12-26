@@ -75,7 +75,6 @@
                 <thead>
                 <tr>
                     <th scope="col">Connections</th>
-                    <th scope="col">Description</th>
                     <th scope="col">Amount</th>
                     <th scope="col">Date</th>
                 </tr>
@@ -83,7 +82,6 @@
                 <tbody>
                 <tr th:each="transferDto: ${transfers}">
                     <td scope="row" th:text="${transferDto.connection}"/>
-                    <td scope="row" th:text="${transferDto.description}"/>
                     <td scope="row" th:text="${transferDto.money}"/>
                     <td scope="row" th:text="${transferDto.date}"/>
                 </tr>
