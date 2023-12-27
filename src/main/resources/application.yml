@@ -2,9 +2,9 @@ spring:
   application:
     name: Pay My Buddy
   datasource:
-    url: jdbc:mysql://localhost:3306/pay_my_buddy
-    username: root
-    password: root
+    url: jdbc:mysql://${PAY_MY_BUDDY_DB_HOSTNAME}/pay_my_buddy_dev
+    username: ${PAY_MY_BUDDY_DB_USERNAME}
+    password: ${PAY_MY_BUDDY_DB_PSW}
     driver-class-name: com.mysql.jdbc.Driver
 
 server:
